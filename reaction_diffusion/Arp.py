@@ -1,7 +1,7 @@
+import numpy as np
 
 
-
-def compute_Arp_reac(C_Arp, cell_mask, arp_state_grid):
+def compute_Arp_reac(C_Arp, cell_mask, arp_state_grid, Acom, H, NA):
     reaction_Arp = np.zeros_like(C_Arp)
     Vcom = Acom * H
     num_inside_cells = np.sum(cell_mask)
@@ -15,7 +15,6 @@ def compute_Arp_reac(C_Arp, cell_mask, arp_state_grid):
                     reaction_Arp[y, x] += 1 * NA**-1 * Vcom**-1  # 増える
 
     return reaction_Arp
-
 
 
 def update_Arp(C_Arp, reac_Arp, diffusion_Arp, Dt):

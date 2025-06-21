@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def update_cofilin(C_cofilin, reac_cofilin, diffusion_cofilin, Dt):
     # 各格子セルごとにG-アクチン濃度を更新
     C_cofilin_new = C_cofilin + Dt * (reac_cofilin + diffusion_cofilin)
@@ -10,8 +11,7 @@ def update_cofilin(C_cofilin, reac_cofilin, diffusion_cofilin, Dt):
     return C_cofilin_new
 
 
-
-def compute_cofilin_reac(C_cofilin, cell_mask, cofilin_state_grid):
+def compute_cofilin_reac(C_cofilin, cell_mask, cofilin_state_grid, Acom, H, NA):
     reaction_cofilin = np.zeros_like(C_cofilin)
     Vcom = Acom * H
     num_inside_cells = np.sum(cell_mask)

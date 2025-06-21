@@ -1,9 +1,10 @@
 import numpy as np
 from matplotlib.path import Path
-from helper_funtions.utilize import bresenham_line, interpolate_line, volume_energy, surface_energy
-from geometry_process import calculate_area, calculate_curvatures
-from membrane import  bending_energy
-from reaction_diffusion.f_actin import factin_energy
+
+from helper_funtions.utilize import bresenham_line, interpolate_line
+
+from .geometry_process import calculate_area, calculate_curvatures
+from .total_energy import total_energy
 
 
 # .細胞内外の判定
@@ -41,7 +42,6 @@ def generate_cell_mask(vertices, Nx, Ny, num_points):
     return mask
 
 
-
 # 細胞膜の範囲外チェック
 def is_outside_cell(x, y, cell_mask):
     return (
@@ -58,27 +58,13 @@ def is_same_grid(x, y, vertex_x, vertex_y, dx, dy):
     )
 
 
-# .エネルギー関数E(E_volume+E_surface+E_bending+E_Factin)
-def total_energy(cell_area, vertices, curvatures, actin_filaments, params, H):
-    V0, S0, A_volume, A_surface, A_bending, lambda_, kBT = params[:7]
-
-    # 各エネルギー項の計算
-
-    e_volume = volume_energy(cell_area, V0, A_volume, H)
-    e_surface = surface_energy(cell_area, S0, A_surface)
-    e_bending = bending_energy(vertices, curvatures, A_bending)
-    #e_factin = factin_energy(actin_filaments, vertices, cell_mask, lambda_, kBT)
-    total = e_bending  # e_volume + e_surface + e_bending +e_factin
-    # print(f"e_volume={e_volume}, e_surface={e_surface}, E_bending={e_bending}, e_factin={e_factin}")
-    # print(f"Total energy: {total}")
-    return float(np.sum(total))
-
-
 # .δE/δxiの計算（式10）
 def grad_x(vertices, cell_area, curvatures, actin_filaments, params, delta, H):
     grad_x_list = np.zeros(len(vertices))
     energy = float(
-        np.sum(total_energy(cell_area, vertices, curvatures, actin_filaments, params,H))
+        np.sum(
+            total_energy(cell_area, vertices, curvatures, actin_filaments, params, H)
+        )
     )
     for i, (x, y) in enumerate(vertices):
         x_plus = np.array(vertices, dtype=float).copy()  # 明示的に浮動小数点型にする
@@ -123,7 +109,9 @@ def grad_x(vertices, cell_area, curvatures, actin_filaments, params, delta, H):
 def grad_y(vertices, cell_area, curvatures, actin_filaments, params, delta, H):
     grad_y_list = np.zeros(len(vertices))
     energy = float(
-        np.sum(total_energy(cell_area, vertices, curvatures, actin_filaments, params, H))
+        np.sum(
+            total_energy(cell_area, vertices, curvatures, actin_filaments, params, H)
+        )
     )
     for i, (x, y) in enumerate(vertices):
         y_plus = np.array(vertices, dtype=float)

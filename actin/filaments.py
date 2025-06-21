@@ -2,7 +2,9 @@ import numpy as np
 
 
 # アクチンフィラメントの初期設定
-def generate_actin_filaments(num_filaments, G_actin_length, C_Gactin, cell_mask, vertices):
+def generate_actin_filaments(
+    num_filaments, G_actin_length, C_Gactin, cell_mask, vertices
+):
     initial_actin = []
     cell_positions = np.argwhere(cell_mask == 1)
 
@@ -105,10 +107,26 @@ def update_actin_filaments(
     arp_state_grid,
     arp_state_bunki,
     C_Arp,
+    F_actin_length,
     G_actin_length,
     dx,
     dy,
     Dt,
+    cell_mask,
+    K_bindarp,
+    K_actarp,
+    K_inactarp,
+    K_bindcof,
+    K_unbindcof,
+    K_sev,
+    K_unbindcp,
+    K_actcp,
+    K_inactcp,
+    K_bindcp,
+    K_polB,
+    K_polP,
+    K_depolB,
+    K_depolP,
 ):
     updated_filaments = []
     filaments = actin_filaments.copy()

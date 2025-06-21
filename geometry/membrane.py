@@ -1,16 +1,9 @@
 import numpy as np
-from geometry.utils import is_outside_cell, is_same_grid
-from geometry.geometry_process import (
-    calculate_area,
-    calculate_curvatures,
-)
 
-from utils import (
-    total_energy,
-    grad_x,
-    grad_y,
-    clip_vertices,
-)
+from .geometry_process import calculate_area, calculate_curvatures
+from .total_energy import total_energy
+from .utils import clip_vertices, grad_x, grad_y, is_outside_cell, is_same_grid
+
 
 # .頂点の初期状態（均等な円となるように頂点を配置）
 def generate_circle_vertices(center, radius, num_points):
@@ -46,7 +39,7 @@ def update_membrane_by_actin(vertices, actin_filaments, cell_mask, dx, dy):
         mem_x_start, mem_y_start = int(x_start), int(y_start)
 
         out_outside = is_outside_cell(mem_x_out, mem_y_out, cell_mask)
-        start_outside = is_outside_cell(mem_x_start, mem_y_start)
+        start_outside = is_outside_cell(mem_x_start, mem_y_start, cell_mask)
 
         # 最も近い膜の頂点を検索
         distances_out = np.sqrt(
@@ -114,17 +107,10 @@ def update_membrane_by_actin(vertices, actin_filaments, cell_mask, dx, dy):
 
     return new_vertices
 
+
 # .勾配降下法による位置の更新（式９）
 def gradient_descent_with_history(
-    vertices,
-    actin_filaments,
-    params,
-    eta,
-    r,
-    epsilon,
-    max_iter,
-    max_resets,
-    H
+    vertices, actin_filaments, params, eta, r, epsilon, max_iter, max_resets, H
 ):
     original_vertices = vertices.copy()  # 元の座標を保存（リセット時に使用）
     original_cell_area = calculate_area(vertices)  # 元の面積を保存
@@ -197,29 +183,3 @@ def gradient_descent_with_history(
     print("Max resets reached, returning last computed vertices.")
 
     return vertices
-
-# .膜の曲率（E_bending）(式11)
-def bending_energy(vertices, curvatures, A_bending):
-    vertices = np.array(vertices)
-    curvatures = np.array(calculate_curvatures(vertices))
-    n = vertices.shape[0]
-    energy = 0.0
-    for i in range(n):
-        # 前後の頂点インデックスを取得
-        prev_idx = (i - 1) % n
-        next_idx = (i + 1) % n
-        # 現在の頂点、前後の頂点の座標
-        xi = vertices[i]
-        xi_prev = vertices[prev_idx]
-        xi_next = vertices[next_idx]
-        # ベクトルの長さを計算
-        length_next = np.linalg.norm(xi_next - xi)
-        length_prev = np.linalg.norm(xi_prev - xi)
-        weight = (length_next + length_prev) / 2.0  # 長さの平均
-        # 曲率エネルギーの計算
-        Ri = curvatures[i]
-        Ri_safe = np.maximum(Ri, 1e-10)  # Riが1e-10未満のときは1e-10に置き換える
-        # print(f"{Ri}")
-        energy += (1 / Ri_safe) ** 2 * weight
-    return A_bending * energy
-

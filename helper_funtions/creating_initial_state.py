@@ -33,7 +33,7 @@ def initialize_grid_and_mask(model):
     cell_center = (model.Nx // 2, model.Ny // 2)
     cell_radius = 10.0  # μm
     X, Y = np.meshgrid(np.arange(model.Nx), np.arange(model.Ny))
-    cell_mask = (X - cell_center[0])**2 + (Y - cell_center[1])**2 <= cell_radius**2
+    cell_mask = (X - cell_center[0]) ** 2 + (Y - cell_center[1]) ** 2 <= cell_radius**2
 
     # 定数
     NA = 6.022e23

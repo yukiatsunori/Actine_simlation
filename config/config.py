@@ -1,61 +1,66 @@
 from pydantic import BaseModel
 
 
-
 class InputModel(BaseModel):
-    # シミュレーション領域と格子の設定
-    Nx, Ny = 70, 70  # 格子サイズ
-    dx = dy = 1.0  # 格子間隔 (μm)
-    Dt = 0.0009  # 時間ステップ（0.01だとGアクチンおかしい）
-    D_Factin = 0.01  # 拡散係数 (μm^2/s)
-    steps = 10000  # シミュレーションステップ数
-    num_points = 50  # 頂点の数
-    total_concentration = 10000  # 細胞内のF-actinとG-actinの濃度総和
-    F_actin_length = 1.0  # 仮設定
-    num_filaments = 300  # 設定
+    # ── シミュレーション領域と格子 ─────────────────────────
+    Nx: int = 70  # 格子サイズ
+    Ny: int = 70
+    dx: float = 1.0  # 格子間隔 (µm)
+    dy: float = 1.0
+    Dt: float = 9e-4  # 時間ステップ (s)
+    D_Factin: float = 0.01  # F-actin 拡散係数 (µm²/s)
+    steps: int = 10  # シミュレーション総ステップ
+    num_points: int = 50  # 膜頂点数
+    total_concentration: float = 10000  # F+G-actin 総濃度
+    F_actin_length: float = 1.0  # ⟵ 要確認 (µm?)
+    num_filaments: int = 300
 
-    # 論文のパラメータM
-    # 初期濃度の設定。
-    C_Factin_init = 0
-    C_Gactin_init = 18.0  # Gアクチンの濃度(μM)
-    C_Arp_init = 0.3  # Arp2/3の初期濃度(μM)
-    C_CP_init = 2.0  # cpの初期濃度（μM）
-    C_cofilin_init = 0.5  # コフィリンの初期濃度(μM)
+    # ── 初期濃度 (µM) ─────────────────────────────────────
+    C_Factin_init: float = 0.0
+    C_Gactin_init: float = 18.0
+    C_Arp_init: float = 0.3
+    C_CP_init: float = 2.0
+    C_cofilin_init: float = 0.5
 
+    # ── 拡散係数 (µm²/s) ──────────────────────────────────
+    D_Gactin: float = 30.0
+    D_Arp: float = 30.0
+    D_CP: float = 0.1
+    D_cofilin: float = 0.1
 
-    # 拡散係数
-    D_Gactin = 30  # アクチン単量体の拡散係数m2/s
-    D_Arp = 30  # Arp2/3の拡散係数m2/s
-    D_CP = 0.1  # キャッピングタンパク質の拡散係数m2/s
-    D_cofilin = 0.1  # コフィリンの拡散係数m2/s
+    # ── 反応速度定数 ─────────────────────────────────────
+    K_polB: float = 120.0  # Barbed end ポリメライズ
+    K_polP: float = 3.0  # Pointed end ポリメライズ
+    K_depolB: float = 1.4
+    K_depolP: float = 21.0
+    K_bindarp: float = 3.4
+    K_bindcp: float = 4.0
+    K_unbindcp: float = 0.04
+    K_bindcof: float = 0.0085
+    K_unbindcof: float = 0.005
+    K_sev: float = 0.012
+    K_actarp: float = 4.0
+    K_inactarp: float = 1.0
+    K_actcp: float = 0.04
+    K_inactcp: float = 4.0**5  # = 1024.0
 
-    # 反応速度定数
-    K_polB = 120  # Barbed endでのポリメライゼーション速度（μM⁻¹ s⁻¹）(120)
-    K_polP = 3  # Pointed endでのポリメライゼーション速度（μM⁻¹ s⁻¹）
-    K_depolB = 1.4  # barded end のデポリメライゼーション速度（s⁻¹）
-    K_depolP = 21  # pointed end のデポリメライゼーション速度（s⁻¹）(21)
-    K_bindarp = 3.4  # Arp2/3のside-binding rate(3.4)
-    K_bindcp = 4  # キャッピングタンパク質の結合速度(3)
-    K_unbindcp = 0.04  # キャッピングタンパク質の解離速度
-    K_bindcof = 0.0085  # コフィリンの結合速度(0.0085)
-    K_unbindcof = 0.005  # コフィリンの解離速度
-    K_sev = 0.012  # コフィリンによる切断速度(0.012)
-    K_actarp = 4  # Arp2/3の活性化速度(4)
-    K_inactarp = 1  # Arp2/3の不活性化速度
-    K_actcp = 0.04  # キャッピングタンパク質の活性率(0.04)
-    K_inactcp = 4.0**5  # キャッピングタンパク質の不活性率
+    # ── 形状・物性パラメータ ─────────────────────────────
+    H: float = 0.2  # 小胞体の高さ (µm)
+    delta_Gactin: float = 2.7  # アクチン単量体長 (?)
+    shita_Mean: float = 70.0  # 分岐角平均 (°)
+    shita_SD: float = 10.0  # 分岐角SD (°)
+    lambda_: float = 10.0  # F-actin 持続長 (µm)
+    G_actin_length: float = 0.0027
+    theta_mean: float = 70.0
+    theta_sd: float = 10.0
+    KBT: float = 4.41e-3  # 熱エネルギー (pJ·µm)
+    A_volume: float = 1e-16  # 体積エネルギー係数 (pJ/µm⁵)
+    A_surface: float = 1e-13  # 表面エネルギー係数 (pJ/µm⁴)
+    A_bending: float = 3.2e-10  # 曲率エネルギー係数 (pJ/µm²)
+    V0: float = 15.6  # 定常体積 (µm³)
+    S0: float = 49.6  # 定常表面積 (µm²)
 
-    H = 0.2  # 小胞体の高さ(μm)
-    delta_Gactin = 2.7  # アクチン単量体の長さ
-    shita_Mean = 70  # 分岐角の平均
-    shita_SD = 10  # 分岐角の標準偏差
-    lambda_ = 10  # Fアクチンの持続長(μm)
-    G_actin_length = 0.0027  # アクチンモノマーの長さ(μm)
-    theta_mean = 70  # 分岐角度の平均（°）
-    theta_sd = 10  # 分岐角度の標準偏差（°）
-    KBT = 4.41 * 10**-3  # 熱エネルギーの単位(pJ μｍ)
-    A_volume = 10**-16  # 体積エネルギー係数(pJ/μm^5)
-    A_surface = 10**-13  # 表面エネルギー係数(pJ/μm^4)
-    A_bending = 3.2 * 10**-10  # 膜の曲率エネルギー係数(pJ/μm^2)
-    V0 = 15.6  # 定常状態の体積μm3
-    S0 = 49.6  # 定常状態の表面積μm2
+    class Config:
+        # 変更不可にしたい場合は uncomment
+        # frozen = True
+        arbitrary_types_allowed = False

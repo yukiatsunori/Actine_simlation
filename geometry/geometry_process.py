@@ -11,6 +11,7 @@ def calculate_area(vertices):
         area += term
     return abs(area) / 2.0
 
+
 # 曲率の計算
 def calculate_curvatures(vertices):
     vertices = np.array(vertices)  # NumPy配列に変換

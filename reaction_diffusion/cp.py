@@ -1,3 +1,4 @@
+import numpy as np
 
 
 def update_CP(C_CP, reac_CP, diffusion_CP, Dt):
@@ -11,7 +12,7 @@ def update_CP(C_CP, reac_CP, diffusion_CP, Dt):
     return C_CP_new
 
 
-def compute_CP_reac(actin_filaments, C_CP):
+def compute_CP_reac(actin_filaments, C_CP, Acom, H, NA):
     # G-アクチンの反応項を初期化
     reaction_CP = np.zeros_like(C_CP)
     Vcom = Acom * H

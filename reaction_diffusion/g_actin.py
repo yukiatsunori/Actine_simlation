@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def compute_G_actin_reaction_with_filaments(actin_filaments, C_Gactin, Acom, H):
+def compute_G_actin_reaction_with_filaments(actin_filaments, C_Gactin, Acom, H, NA):
     # G-アクチンの反応項を初期化
     reaction_Gactin = np.zeros_like(C_Gactin)
     Vcom = Acom * H
@@ -41,6 +41,7 @@ def update_G_actin(C_Gactin, reaction_Gactin, diffusion_Gactin, Dt):
     C_Gactin_new = np.maximum(C_Gactin_new, 0)
 
     return C_Gactin_new
+
 
 # 反応拡散方程式
 # .反射境界条件を適用する関数
