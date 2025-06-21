@@ -47,3 +47,45 @@ uv run main.py
 ```bash
 uv run visualization/visualize_module.py
 ```
+
+### ディレクトリ構造
+
+'''bash
+project_actine/
+├── common_libs.py
+├── main.py
+├── pyproject.toml
+├── README.md
+├── uv.lock
+│
+├── actin/
+│   └── filaments.py
+│
+├── config/
+│   ├── config.py
+│   └── __init__.py
+│
+├── data/ #ここにデータがステップ毎に保存される
+│
+├── geometry/
+│   ├── geometry_process.py
+│   ├── membrane.py
+│   ├── total_energy.py
+│   └── utils.py
+│
+├── helper_funtions/
+│   ├── binding_prob.py
+│   ├── creating_initial_state.py
+│   └── utilize.py
+│
+├── reaction_diffusion/
+│   ├── Arp.py
+│   ├── cofilin.py
+│   ├── cp.py
+│   ├── f_actin.py
+│   ├── g_actin.py
+│   └── redistribution.py
+│
+└── visualization/
+    └── visualize_module.py
+'''
