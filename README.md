@@ -51,7 +51,6 @@ uv run visualization/visualize_module.py
 ### ディレクトリ構造
 
 <pre><code>
-'''bash
 project_actine/
 ├── common_libs.py
 ├── main.py
@@ -89,5 +88,5 @@ project_actine/
 │
 └── visualization/
     └── visualize_module.py
-'''
+
 </code></pre>
