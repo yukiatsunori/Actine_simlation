@@ -1,5 +1,3 @@
-# ryoden-numazu-hvac-optimize
-
 # 環境構築
 
 (`Python 3.11.9` で動作確認済み)
