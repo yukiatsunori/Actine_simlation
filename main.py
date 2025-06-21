@@ -303,6 +303,7 @@ for t in range(input_model.steps):
     )
     print(f"📝 saved: {filename}")
 
+    """
     # データの型を確認
     actin_filaments_history.append([filament.copy() for filament in current_actin])
     if input_model.steps % 10 == 0:
@@ -312,6 +313,7 @@ for t in range(input_model.steps):
         C_CP_data.append(C_CP.copy())
         C_cofilin_data.append(C_cofilin.copy())
         C_Arp_data.append(C_Arp.copy())
+    """
 
     actin_filaments = current_actin.copy()
 
